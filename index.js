@@ -9,10 +9,10 @@ import Foundation from 'react-native-vector-icons/Foundation';
 
 import PropTypes from 'prop-types';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {Animated, Dimensions, Easing, StyleSheet, View} from 'react-native';
 
-import {View, Animated, Easing, StyleSheet} from 'react-native';
-
+const {screenWidth, screenHeight} = Dimensions.get('window')
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
@@ -171,13 +171,13 @@ class HudView extends Component {
     _getContainerStyles() {
         return [
             this.props.style, {
-                flex: 1
+                flex: 1,
             }
         ];
     }
 
     _getIconWrapperStyles() {
-        return this.state.isRotating ? {transform: [{ rotate: this._getInterpolatedRotateAnimation() }]} : {};
+        return this.state.isRotating ? {transform: [{rotate: this._getInterpolatedRotateAnimation()}]} : {};
     }
 
     _renderIcon() {
@@ -222,11 +222,14 @@ class HudView extends Component {
             return;
         }
 
-        return <View style={styles.mainContainer}>
-            <Animated.View style={this._getHudContainerStyles()}>
-                {this._renderIcon()}
-            </Animated.View>
-        </View>;
+        return (
+            <View style={[styles.hubMask,this.props.maskStyle]}>
+                <View style={styles.mainContainer}>
+                    <Animated.View style={this._getHudContainerStyles()}>
+                        {this._renderIcon()}
+                    </Animated.View>
+                </View>
+            </View>);
     }
 
     hide() {
@@ -259,7 +262,7 @@ class HudView extends Component {
     }
 
     show(type) {
-        switch (type||this.props.type) {
+        switch (type || this.props.type) {
             case 'success':
                 return this.showSuccess();
             case 'error':
